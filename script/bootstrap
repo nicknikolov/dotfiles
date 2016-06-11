@@ -200,8 +200,8 @@ install_dotfiles () {
   done
 
   # neovim
-  link_file $DOTFILES_ROOT/config/nvim/init.vim.symlink ~/.config/nvim/init.vim
-  for src in $(find -H "$DOTFILES_ROOT/config/nvim/UltiSnips" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  link_file $DOTFILES_ROOT/vim/nvim/init.vim.symlink ~/.config/nvim/init.vim
+  for src in $(find -H "$DOTFILES_ROOT/vim/UltiSnips" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
   do
     dst="$HOME/.config/nvim/UltiSnips/$(basename "${src%.*}")"
     link_file "$src" "$dst"

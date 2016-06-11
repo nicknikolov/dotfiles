@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# run this script every now and then to update your stuff
+
+if [ "$(uname -s)" == "Darwin" ]; then
+  echo "upgrade brew"
+  brew update
+  echo "upgrade brew packages"
+  brew upgrade
+  echo "ok done"
+fi
+
+if [ "$(uname -s)" == "Linux" ]; then
+  echo "upgrade packages"
+  sudo apt-get update        # Fetches the list of available updates
+  sudo apt-get upgrade       # Strictly upgrades the current packages
+  sudo apt-get dist-upgrade  # Installs updates (new ones)
+  sudo apt-get update
+  echo "ok done"
+fi
+
+echo "updating global npm packages"
+npm update -g
+echo "ok done"
+echo "see you soon"

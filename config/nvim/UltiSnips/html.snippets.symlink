@@ -1,0 +1,21 @@
+snippet doctype "HTML - 5.0 (doctype)"
+<!DOCTYPE html>
+endsnippet
+
+snippet div "<div>"
+<div>
+	$0
+</div>
+endsnippet
+
+snippet div. "<div> with class"
+<div`!p snip.rv=' class="' if t[1] else ""`${1:name}`!p snip.rv = '"' if t[1] else ""`>
+	$0
+</div>
+endsnippet
+
+snippet div# "<div> with ID & class" w
+<div`!p snip.rv=' id="' if t[1] else ""`${1:name}`!p snip.rv = '"' if t[1] else ""``!p snip.rv=' class="' if t[2] else ""`${2:name}`!p snip.rv = '"' if t[2] else ""`>
+	$0
+</div>
+endsnippet

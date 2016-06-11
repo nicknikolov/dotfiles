@@ -1,0 +1,242 @@
+#!/usr/bin/env bash
+#
+# bootstrap installs things.
+
+cd "$(dirname "$0")/.."
+DOTFILES_ROOT=$(pwd -P)
+
+set -e
+
+echo ''
+
+info () {
+  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+}
+
+user () {
+  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+}
+
+success () {
+  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+}
+
+fail () {
+  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+  echo ''
+  exit
+}
+
+link_file () {
+  local src=$1 dst=$2
+
+  local overwrite= backup= skip=
+  local action=
+
+  if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
+  then
+
+    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
+    then
+
+      local currentSrc="$(readlink $dst)"
+
+      if [ "$currentSrc" == "$src" ]
+      then
+
+        skip=true;
+
+      else
+
+        user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
+        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+        read -n 1 action
+
+        case "$action" in
+          o )
+            overwrite=true;;
+          O )
+            overwrite_all=true;;
+          b )
+            backup=true;;
+          B )
+            backup_all=true;;
+          s )
+            skip=true;;
+          S )
+            skip_all=true;;
+          * )
+            ;;
+        esac
+
+      fi
+
+    fi
+
+    overwrite=${overwrite:-$overwrite_all}
+    backup=${backup:-$backup_all}
+    skip=${skip:-$skip_all}
+
+    if [ "$overwrite" == "true" ]
+    then
+      rm -rf "$dst"
+      success "removed $dst"
+    fi
+
+    if [ "$backup" == "true" ]
+    then
+      mv "$dst" "${dst}.backup"
+      success "moved $dst to ${dst}.backup"
+    fi
+
+    if [ "$skip" == "true" ]
+    then
+      success "skipped $src"
+    fi
+  fi
+
+  if [ "$skip" != "true" ]  # "false" or empty
+  then
+    ln -s "$1" "$2"
+    success "linked $1 to $2"
+  fi
+}
+
+install_brew () {
+  # If we're on a Mac, let's install and setup homebrew.
+  if [ "$(uname -s)" == "Darwin" ]
+  then
+    if [ hash brew 2>/dev/null ]; then
+      info "installing homebrew"
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      success "ok done"
+      info "now installing packages"
+      brew bundle
+      success "ok done"
+    else
+      success "homebrew is already installed, nice one."
+    fi
+  fi
+}
+
+install_zsh () {
+  # https://github.com/michaeljsmalley/dotfiles/blob/master/makesymlinks.sh
+  # Test to see if zshell is installed.  If it is:
+  if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
+    # Set the default shell to zsh if it isn't currently set to zsh
+    if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
+      info "setting zsh as default"
+      chsh -s $(which zsh)
+
+      info "cloning zsh plugins"
+      git clone https://github.com/olivierverdier/zsh-git-prompt "$HOME/.zsh_plugins/zsh-git-prompt"
+      git clone https://github.com/zsh-users/zsh-history-substring-search "$HOME/.zsh_plugins/zsh-history-substring-search"
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting "$HOME/.zsh_plugins/zsh-syntax-highlighting"
+      success "ok, done"
+    else
+      success "zsh is already installed and default, nice one."
+    fi
+  else
+    # If zsh isn't installed, get the platform of the current machine
+    platform=$(uname);
+    # If the platform is Linux, try an apt-get to install zsh and then recurse
+    if [[ $platform == 'Linux' ]]; then
+      if [[ -f /etc/redhat-release ]]; then
+        info "installing zsh"
+        sudo yum install zsh
+        success "ok done"
+        install_zsh
+      fi
+      if [[ -f /etc/debian_version ]]; then
+        info "installing zsh"
+        sudo apt-get install zsh
+        success "ok done"
+        install_zsh
+      fi
+      # If the platform is OS X, tell the user to install zsh :)
+    elif [[ $platform == 'Darwin' ]]; then
+      info "installing zsh"
+      brew install zsh
+      success "ok done"
+      install_zsh
+    fi
+  fi
+}
+
+install_neovim () {
+  if [ hash nvim 2>/dev/null ]; then
+    if [[ $platform == 'Linux' ]]; then
+      info "installing neovim"
+      sudo apt-get install software-properties-common
+      sudo add-apt-repository ppa:neovim-ppa/unstable
+      sudo apt-get update
+      sudo apt-get install neovim
+      sudo apt-get install python-dev python-pip python3-dev python3-pip
+      success "ok done"
+    elif [[ $platform == 'Darwin' ]]; then
+      info "installing neovim"
+      brew install neovim/neovim/neovim
+      success "ok done"
+    fi
+
+    info "installing Plug, don't forget to install plugins when you first run neovim (using :PlugInstall)"
+    curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    success "ok done"
+  else
+    success "neovim is already installed, nice one."
+  fi
+}
+
+install_dotfiles () {
+  info 'installing dotfiles'
+
+  local overwrite_all=false backup_all=false skip_all=false
+
+  # root stuff
+  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  do
+    dst="$HOME/.$(basename "${src%.*}")"
+    link_file "$src" "$dst"
+  done
+
+  # neovim
+  link_file $DOTFILES_ROOT/config/nvim/init.vim.symlink ~/.config/nvim/init.vim
+  for src in $(find -H "$DOTFILES_ROOT/config/nvim/UltiSnips" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  do
+    dst="$HOME/.config/nvim/UltiSnips/$(basename "${src%.*}")"
+    link_file "$src" "$dst"
+  done
+}
+
+install_node () {
+  if [ hash node 2>/dev/null ]; then
+    if [[ $platform == 'Linux' ]]; then
+      info "installing nvm"
+      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
+      info "installing latest version of node"
+      nvm install node
+      info "use latest version of node"
+      nvm use default
+      success "ok done"
+    elif [[ $platform == 'Darwin' ]]; then
+      info "installing node"
+      brew install node
+      success "ok done"
+    fi
+  else
+    success "node is already installed, nice one."
+  fi
+}
+
+install_npm_packages () {
+    npm install tern -g
+}
+
+install_brew
+install_zsh
+install_neovim
+install_node
+install_npm_packages
+install_dotfiles
+
+success 'that`s all folks!'

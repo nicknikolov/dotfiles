@@ -1,0 +1,13 @@
+{
+  "libs": [
+    "browser"
+  ],
+
+  "plugins": {
+    "node": {},
+    "requirejs": {
+      "baseURL": "./",
+      "paths": {}
+    }
+  }
+}

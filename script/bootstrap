@@ -246,4 +246,5 @@ install_neovim
 install_node
 install_dotfiles
 
+info 'don`t forget to source your .zshr!'
 success 'that`s all folks!'

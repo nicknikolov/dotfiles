@@ -178,13 +178,12 @@ install_neovim () {
       brew install neovim/neovim/neovim
       success "ok done"
     fi
-
-    info "installing Plug, don't forget to install plugins when you first run neovim (using :PlugInstall)"
-    curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    success "ok done"
   else
     success "neovim is already installed, nice one."
   fi
+  info "installing Plug, don't forget to install plugins when you first run neovim (using :PlugInstall)"
+  curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  success "ok done"
 }
 
 install_dotfiles () {

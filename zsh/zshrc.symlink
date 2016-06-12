@@ -1,0 +1,49 @@
+# nnsh:
+
+# Set architecture flags
+export ARCHFLAGS="-arch x86_64"
+
+# Anaconda
+export PATH=/Applications/anaconda/bin:$PATH
+export PATH=/Library/TeX/texbin:$PATH
+
+# Ensure user-installed binaries take precedence
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+
+# Useful aliases
+alias plask='/Applications/Plask.app/Contents/MacOS/Plask'
+alias l='ls -1Gt'
+alias ll='ls -gohGt'
+alias la='ls -gohGa'
+alias web-proj='git clone git@github.com:nicknikolov/browserify-example.git'
+alias nodetree='tree -I "node_modules" .'
+alias ngp='npm ls -g --depth=0'
+alias e='nvim'
+alias srcsh='source ~/.zshrc'
+
+autoload -U compinit promptinit
+compinit
+promptinit
+
+# History
+export HISTSIZE=100000
+export HISTFILE="$HOME/.history"
+export SAVEHIST=$HISTSIZE
+
+
+# Plugins
+source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh_plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source ~/.zsh_plugins/zsh-git-prompt/zshrc.sh
+
+ZSH_THEME_GIT_PROMPT_PREFIX=":"
+ZSH_THEME_GIT_PROMPT_SUFFIX=""
+ZSH_THEME_GIT_PROMPT_SEPARATOR=":"
+PROMPT='%C$(git_super_status) '
+RPROMPT='%{$fg[grey]%}%n%{$reset_color%}@%{$fg[cyan]%}%m%{$reset_color%}'
+
+# bind P and N for EMACS mode
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
+
+export EDITOR=nvim

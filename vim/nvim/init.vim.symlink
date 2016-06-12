@@ -2,7 +2,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Navigation
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'airodactyl/neovim-ranger'
+" Plug 'airodactyl/neovim-ranger'
 
 " UI
 Plug 'vim-airline/vim-airline'
@@ -200,7 +200,7 @@ let g:ctrlp_working_path_mode = 0
 nnoremap <leader>pp :CtrlPClearCache<CR>
 
 " Ranger
-nnoremap <leader>o :e %:p:h<cr>
+" nnoremap <leader>o :e %:p:h<cr>
 
 " Jump to last cursor position unless it's invalid or in an event handler
 " autocmd BufReadPost *

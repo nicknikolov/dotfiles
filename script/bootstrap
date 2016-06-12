@@ -221,10 +221,14 @@ install_node () {
       nvm install node
       info "use latest version of node"
       nvm use default
+      info "installing some npm packages"
+      install_npm_packages
       success "ok done"
     elif [[ $platform == 'Darwin' ]]; then
       info "installing node"
       brew install node
+      info "installing some npm packages"
+      install_npm_packages
       success "ok done"
     fi
   else
@@ -240,7 +244,6 @@ install_brew
 install_zsh
 install_neovim
 install_node
-install_npm_packages
 install_dotfiles
 
 success 'that`s all folks!'

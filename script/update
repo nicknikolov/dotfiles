@@ -7,6 +7,8 @@ if [ "$(uname -s)" == "Darwin" ]; then
   brew update
   echo "upgrade brew packages"
   brew upgrade
+  echo "update os x"
+  sudo softwareupdate -i -a
   echo "ok done"
 fi
 

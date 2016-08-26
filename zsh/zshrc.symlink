@@ -3,8 +3,9 @@
 # Set architecture flags
 export ARCHFLAGS="-arch x86_64"
 
-# Anaconda
-export PATH=/Applications/anaconda/bin:$PATH
+# added by Anaconda3 4.1.1 installer
+export PATH="/Users/nicknikolov/work/anaconda3/bin:$PATH"
+
 export PATH=/Library/TeX/texbin:$PATH
 
 # Ensure user-installed binaries take precedence
@@ -43,6 +44,7 @@ PROMPT='%C$(git_super_status) '
 RPROMPT='%{$fg[grey]%}%n%{$reset_color%}@%{$fg[cyan]%}%m%{$reset_color%}'
 
 # bind P and N for EMACS mode
+bindkey -e
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 

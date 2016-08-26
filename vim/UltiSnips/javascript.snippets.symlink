@@ -1,6 +1,6 @@
 # JS normal stuff
 snippet cl
-console.log('${1}')
+console.log(${1})
 endsnippet
 
 snippet timeout "setTimeout function"
@@ -24,6 +24,11 @@ endsnippet
 snippet fun2 "function ()"
 function () {
 	${VISUAL}$0
+}
+endsnippet
+
+snippet for "forloop"
+for (var i = 0; i < ${VISUAL}$0; i++) {
 }
 endsnippet
 

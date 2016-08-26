@@ -1,8 +1,7 @@
-call plug#begin('~/.config/nvim/plugged')
+-call plug#begin('~/.config/nvim/plugged')
 
 " Navigation
 Plug 'ctrlpvim/ctrlp.vim'
-" Plug 'airodactyl/neovim-ranger'
 
 " UI
 Plug 'vim-airline/vim-airline'
@@ -13,29 +12,15 @@ Plug 'tpope/vim-fugitive'
 " Writing code
 "" Javascript
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'mxw/vim-jsx', { 'for': 'javascript' }
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'elzr/vim-json'
 "" Rust
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'rust-lang/rust.vim'
 "" HTML / CSS
-Plug 'mattn/emmet-vim'
 Plug 'othree/html5.vim'
-"" Elm
-Plug 'elmcast/elm-vim'
 
-" Writing prose
-Plug 'beloglazov/vim-online-thesaurus'
 "" Markdown
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-" Plug 'suan/vim-instant-markdown', { 'for': 'markdown' }
-"" Writing Layout
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
-"" LaTeX
-Plug 'lervag/vimtex'
+Plug 'suan/vim-instant-markdown', { 'for': 'markdown' }
 
 " Snippets and completion
 function! DoRemote(arg)
@@ -43,85 +28,78 @@ function! DoRemote(arg)
 endfunction
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'SirVer/ultisnips'
-Plug 'ervandew/supertab'
 
 " Utilities
 Plug 'tpope/vim-surround'
 Plug 'guns/xterm-color-table.vim'
 Plug 'tpope/vim-commentary'
 Plug 'pbrisbin/vim-mkdir'
+Plug 'alvan/vim-closetag'
+Plug 'git-time-metric/gtm-vim-plugin'
 
 call plug#end()
 " -----------------------------------------------------------------------------
 
 filetype off                  " required!
-filetype plugin indent on
-
-syntax enable
-set lazyredraw                " redraw only when we need to.
 
 " Theme
-set t_Co=256
-" color gruvbox
 color dark_matter
 set background=dark
+syntax on
 
-set relativenumber
-set number
+" Vim defaults
+set nonumber                  " Don't show line numbers
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set expandtab
-set showcmd
-set wildmenu
-set showmatch
-set incsearch
-set hlsearch
-filetype indent on
+set expandtab                 " In insert mode, expand tab to spaces
+set showcmd                   " Show (partial) command in the last line of the screen
+set showmatch                 " When a bracket is inserted, briefly jump to the matching one
 set smartindent
+set lazyredraw                " redraw only when we need to.
 
-set visualbell           " don't beep
-set noerrorbells         " don't beep
+set visualbell                " don't beep
+set noerrorbells              " don't beep
 
-" soft-wrap with no implicit linebreaks
+" Soft-wrap with no implicit linebreaks
 set wrap
 set linebreak
-set nolist  " list disables linebrea
+set nolist                    " list disables linebrea
 nnoremap j gj
 nnoremap k gk
 vnoremap j gj
 vnoremap k gk
 
-" Match Error '\s\+$'
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
+" Folds
+set foldmethod=indent         " Fold based on indent
+set foldnestmax=3             " Deepest fold is 3 levels
+set nofoldenable              " Don't fold by default
+
+" Open new split panes to right and bottom, which feels more natural
+set splitbelow
+set splitright
+
+" Display extra whitespace
+set list listchars=tab:»·,trail:·,nbsp:·
 
 " Airline options
-let g:airline#extensions#tabline#enabled = 1
 set laststatus=2
 
 " Deoplete
 let g:deoplete#enable_refresh_always = 1
 let g:deoplete#enable_at_startup = 1
+let g:tern_request_timeout = 1
 let g:tern_show_signature_in_pum = 0
+
+" Keep the cursor in the same place when switching buffers
+set nostartofline
 
 " Movement within 'ins-completion-menu'
 imap <expr><C-j>   pumvisible() ? "\<C-n>" : "\<C-j>"
 imap <expr><C-k>   pumvisible() ? "\<C-p>" : "\<C-k>"
 
-" Supertab
-
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" Ultisnips
-
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
 imap <silent><expr><Tab> pumvisible() ? "\<C-n>" : "\<C-h>"
 
-" Tern
 " Disable info window
 autocmd BufEnter * set completeopt-=preview
 
@@ -140,29 +118,23 @@ autocmd BufRead,BufNewFile *.tex setlocal spell
 let mapleader = "\<Space>"
 
 " Shortucts
-nnoremap <leader>ev :e ~/.config/nvim/init.vim<cr>
 nnoremap <leader>w :w<CR>
-nnoremap <CR> :noh<CR>
+nnoremap <leader><CR> :noh<CR>
+nnoremap <leader>ev :e ~/.config/nvim/init.vim<cr>
 nnoremap <leader>pi :PlugInstall<cr>
-nnoremap <leader>so :source ~/.config/nvim/init.vim<cr>
+nnoremap <leader>so :source ~/work/dotfiles/vim/nvim/init.vim.symlink<cr>
+
+" Close buffer
 nnoremap <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
 
-nnoremap <leader>jr :TernRename<cr>
-nnoremap <leader>jd :TernDef<cr>
-
+" Fastest escape ever
 inoremap jk <Esc>
-inoremap jj <Esc>
-inoremap kk <Esc>
-inoremap kj <Esc>
 
 " Console log word under cursor
 nnoremap <leader>l yiWo console.log(<esc>pa)<esc>=l
 
 " Paste from clipboard
 nnoremap <leader>v :set paste<cr>"+p :set nopaste<cr>
-
-nnoremap <c-i> i<space><esc>
-nnoremap <c-o> o<esc>
 
 " Cycle buffers
 :nnoremap <S-l> :bnext!<CR>
@@ -176,37 +148,12 @@ vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
 
-" Latex
-nnoremap <leader>vlw :VimtexWordCount<cr>
-let g:tex_flavor='latex'
-
-" Limelight
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-
-" Folding
-set foldmethod=indent   "fold based on indent
-set foldnestmax=10      "deepest fold is 10 levels
-set nofoldenable        "dont fold by default
-
-" JSX
-let g:jsx_ext_required = 0
-
-" CTRLP
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|\.swp'
-let g:ctrlp_working_path_mode = 0
-nnoremap <leader>pp :CtrlPClearCache<CR>
-
-" Ranger
-" nnoremap <leader>o :e %:p:h<cr>
-
 " Jump to last cursor position unless it's invalid or in an event handler
-" autocmd BufReadPost *
-"       \ if line("'\"") > 0 && line("'\"") <= line("$") |
-"       \   exe "normal g`\"" |
-"       \ endif
+autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      " \   exe "normal g`\" zz" |
+      \   exe "normal g`\" " |
+      \ endif
 
 function! RenameFile()
     let old_name = expand('%')
@@ -220,3 +167,32 @@ function! RenameFile()
 endfunction
 map <leader>n :call RenameFile()<cr>
 
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR><CR>
+
+" CTRLP
+" let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|\.swp'
+" let g:ctrlp_working_path_mode = 0
+" let g:ctrlp_working_path_mode = 'ra'
+
+" gtm
+let g:gtm_plugin_status_enabled = 1 " show gtm time working
+function! AirlineInit()
+  if exists('*GTMStatusline')
+    call airline#parts#define_function('gtmstatus', 'GTMStatusline')
+    let g:airline_section_b = airline#section#create([g:airline_section_b, ' ', '[', 'gtmstatus', ']'])
+  endif
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()

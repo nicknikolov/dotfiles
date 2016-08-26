@@ -6,13 +6,17 @@
   br = branch
   ci = commit
   st = status
+  s  = status -s
   di = diff
   dc = diff --cached
+  ds = diff --stat=160,120
   amend = commit --amend
   aa = add --all
   pullff = pull --ff-only
   pom = push origin master
   visual = !gitk
+  unstage = reset
+  uncommit = reset --soft HEAD^
 
   # Fancy logging.
   # https://github.com/garybernhardt/dotfiles/blob/master/.gitconfig
@@ -31,4 +35,6 @@
   la = !git l --all
 [core]
   editor = nvim
-  excludesfile = /Users/nicknikolov/.gitignore_global
+  excludesfile = ~/.gitignore
+[color]
+  ui = true

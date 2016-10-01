@@ -241,7 +241,7 @@ install_node () {
 }
 
 install_npm_packages () {
-    sudo npm install tern -g
+    npm install tern -g
 }
 
 install_brew

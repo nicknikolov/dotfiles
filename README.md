@@ -12,6 +12,7 @@ sudo apt-get install git
 ```
 4. setup your ssh keys so you can clone from github using ssh (kind of optional)
 5. now run `git clone git@github.com:nicknikolov/dotfiles.git` somewhere (usually, I have a work or workspace folder in every machine I touch)
+6. now running the bootstrap script in the script folder should set everything up (installing zsh, neovim, brew if on os x, node and all dotfiles)
 
 
 

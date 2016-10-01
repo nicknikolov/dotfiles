@@ -165,6 +165,9 @@ install_zsh () {
 install_neovim () {
   if ! hash nvim 2>/dev/null; then
     if [[ $(uname -s) == 'Linux' ]]; then
+      info "installing pip"
+      sudo apt-get update
+      sudo apt-get install python-pip
       info "installing neovim"
       sudo apt-get install software-properties-common
       sudo add-apt-repository ppa:neovim-ppa/unstable

@@ -219,6 +219,8 @@ install_node () {
     if [[ $(uname -s) == 'Linux' ]]; then
       info "installing nvm"
       curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
+      export NVM_DIR="/home/demo/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
       info "installing latest version of node"
       nvm install node
       info "use latest version of node"

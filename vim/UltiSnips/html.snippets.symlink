@@ -19,3 +19,8 @@ snippet div# "<div> with ID & class" w
 	$0
 </div>
 endsnippet
+
+
+snippet script "<script>" w
+<script src="${1:script}.js"></script>
+endsnippet

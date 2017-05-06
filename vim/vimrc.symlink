@@ -119,14 +119,6 @@ autocmd BufNewFile,BufRead *.json set ft=javascript
 " PLUGINS
 nnoremap <silent> <leader>f :FZF<cr>
 
-function! s:fzf_statusline()
-  " Override statusline as you like
-  highlight fzf1 ctermfg=black ctermbg=NONE
-  highlight fzf2 ctermfg=black ctermbg=NONE
-  highlight fzf3 ctermfg=black ctermbg=NONE
-  setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
-endfunction
-
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
 " The Silver Searcher

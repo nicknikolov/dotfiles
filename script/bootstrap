@@ -162,35 +162,6 @@ install_zsh () {
   fi
 }
 
-install_neovim () {
-  if ! hash nvim 2>/dev/null; then
-    if [[ $(uname -s) == 'Linux' ]]; then
-      info "installing pip"
-      sudo apt-get update
-      sudo apt-get install python-pip
-      info "installing neovim"
-      sudo apt-get install software-properties-common
-      sudo add-apt-repository ppa:neovim-ppa/unstable
-      sudo apt-get update
-      sudo apt-get install neovim
-      sudo apt-get install python-dev python-pip python3-dev python3-pip
-      success "ok done"
-    elif [[ $(uname -s) == 'Darwin' ]]; then
-      info "installing neovim"
-      brew install neovim/neovim/neovim
-      success "ok done"
-    fi
-  else
-    success "neovim is already installed, nice one."
-  fi
-  info "installing Plug, don't forget to install plugins when you first run neovim (using :PlugInstall)"
-  curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  success "ok done"
-  sudo pip  install --upgrade neovim
-  sudo pip2 install --upgrade neovim
-  sudo pip3 install --upgrade neovim
-}
-
 install_dotfiles () {
   info 'installing dotfiles'
 
@@ -246,7 +217,6 @@ install_npm_packages () {
 
 install_brew
 install_zsh
-install_neovim
 install_node
 install_dotfiles
 

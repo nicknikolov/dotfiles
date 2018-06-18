@@ -6,24 +6,28 @@ Plug 'junegunn/fzf.vim'
 
 " UI
 Plug 'nicknikolov/dark-matter.vim'
+Plug 'lifepillar/vim-solarized8'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 " Writing code
 "" Javascript
 Plug 'pangloss/vim-javascript'
-Plug 'moll/vim-node'
+" Plug 'Quramy/vim-js-pretty-template'
+" Plug 'moll/vim-node'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+
 "" GLSL
-Plug 'tikhomirov/vim-glsl'
+ Plug 'tikhomirov/vim-glsl'
 "" Rust
 " Plug 'rust-lang/rust.vim'
 
 " Utilities
 Plug 'guns/xterm-color-table.vim'
 Plug 'tpope/vim-commentary'
-Plug 'ervandew/supertab'
 Plug 'pbrisbin/vim-mkdir'
+Plug 'maralla/completor.vim'
+Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -33,23 +37,42 @@ filetype plugin indent on
 
 syntax enable
 set t_Co=256
-set background=dark
-colorscheme dark_matter
+" set background=dark
+" colorscheme dark_matter
+
+set background=light
+colorscheme solarized
+
+" call jspretmpl#register_tag('html', 'html')
+" call jspretmpl#register_tag('css', 'css')
+" autocmd FileType javascript JsPreTmpl html
+
+if has('gui_running')
+  set guifont=Fira\ Mono:h12
+  colorscheme solarized
+  set background=light
+  set guioptions-=m  "remove menu bar
+  set guioptions-=T  "remove toolbar
+  set guioptions-=r  "remove right-hand scroll bar
+  set guioptions-=L  "remove left-hand scroll bar
+endif
 
 set ttyfast
 set lazyredraw
+set showtabline=2
+set laststatus=2
 
-set number
+set nonumber
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
 set showcmd
 set wildmenu
-set showmatch
+" set showmatch
 set incsearch
 set hlsearch
-set matchtime=1
+" set matchtime=1
 set smartindent
 set nowrap
 set noerrorbells         " don't beep
@@ -68,17 +91,26 @@ set nowritebackup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " Update gutter quicker
-set updatetime=250
+" set updatetime=250
+" let g:gitgutter_eager = 0
+
+set mouse=a "lord forgive me
 
 " make netrw look ok
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 
+" status line design
+set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
+
 let mapleader = "\<Space>"
 
-" Match Error '\s\+$'
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
 
 " REMAPPINGS
 
@@ -98,13 +130,16 @@ nnoremap <leader>l yiWo console.log(<esc>pa)<esc>=l
 " Remove trailing whitespaces
 nnoremap <silent> <Leader><BS> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let@/=_s<Bar>:nohl<CR>:w<CR>
 
+" Can't be bothered to understand ESC vs <c-c> in insert mode
+imap <c-c> <esc>
+
 " When copying and pasting - move to end of selection
 vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
 
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR><CR>
+noremap <leader>j 15j
+noremap <leader>k 15k
 
 " AUTOCOMMANDS
 
@@ -119,17 +154,37 @@ autocmd BufNewFile,BufRead *.json set ft=javascript
 " PLUGINS
 nnoremap <silent> <leader>f :FZF<cr>
 
-autocmd! User FzfStatusLine call <SID>fzf_statusline()
-
 " The Silver Searcher
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
-
-  let g:gitgutter_grep_command = 'ag'
+  " let g:gitgutter_grep_command = 'ag'
+  let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 endif
 
-" let supertab be smart
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabClosePreviewOnPopupClose = 1
+let g:completor_node_binary = '/usr/local/bin/node'
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+" RENAME CURRENT FILE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+" Ale
+let g:ale_fixers = {'javascript': ['']}
+let g:ale_linters = {'javascript': ['standard']}
+let g:ale_fix_on_save = 0
+let g:ale_lint_on_text_changed = 'never' " Only lint when text is saved.
+let g:ale_set_highlights = 1
+
 

@@ -103,64 +103,61 @@ link_file () {
 }
 
 install_brew () {
-  # If we're on a Mac, let's install and setup homebrew.
-  if [ "$(uname -s)" == "Darwin" ]
-  then
-    if ! hash brew 2>/dev/null; then
-      info "installing homebrew"
-      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-      success "ok done"
-      info "now installing packages"
-      brew bundle
-      success "ok done"
-    else
-      success "homebrew is already installed, nice one."
-    fi
-  fi
-}
-
-install_zsh () {
-  # https://github.com/michaeljsmalley/dotfiles/blob/master/makesymlinks.sh
-  # Test to see if zshell is installed.  If it is:
-  if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
-    # Set the default shell to zsh if it isn't currently set to zsh
-    if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
-      info "setting zsh as default"
-      chsh -s $(which zsh)
-
-      info "cloning zsh plugins"
-      git clone https://github.com/olivierverdier/zsh-git-prompt "$HOME/.zsh_plugins/zsh-git-prompt"
-      git clone https://github.com/zsh-users/zsh-history-substring-search "$HOME/.zsh_plugins/zsh-history-substring-search"
-      git clone https://github.com/zsh-users/zsh-syntax-highlighting "$HOME/.zsh_plugins/zsh-syntax-highlighting"
-      success "ok, done"
-    else
-      success "zsh is already installed and default, nice one."
-    fi
+  # let's install and setup homebrew.
+  if ! hash brew 2>/dev/null; then
+    info "installing homebrew"
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    success "ok done"
+    info "now installing packages"
+    brew bundle
+    success "ok done"
   else
-    # If zsh isn't installed, get the platform of the current machine
-    # If the platform is Linux, try an apt-get to install zsh and then recurse
-    if [[ $(uname -s) == 'Linux' ]]; then
-      if [[ -f /etc/redhat-release ]]; then
-        info "installing zsh"
-        sudo yum install zsh
-        success "ok done"
-        install_zsh
-      fi
-      if [[ -f /etc/debian_version ]]; then
-        info "installing zsh"
-        sudo apt-get install zsh
-        success "ok done"
-        install_zsh
-      fi
-      # If the platform is OS X, tell the user to install zsh :)
-    elif [[ $(uname -s) == 'Darwin' ]]; then
-      info "installing zsh"
-      brew install zsh
-      success "ok done"
-      install_zsh
-    fi
+    success "homebrew is already installed."
   fi
 }
+
+# install_zsh () {
+#   # https://github.com/michaeljsmalley/dotfiles/blob/master/makesymlinks.sh
+#   # Test to see if zshell is installed.  If it is:
+#   if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
+#     # Set the default shell to zsh if it isn't currently set to zsh
+#     if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
+#       info "setting zsh as default"
+#       chsh -s $(which zsh)
+
+#       info "cloning zsh plugins"
+#       git clone https://github.com/olivierverdier/zsh-git-prompt "$HOME/.zsh_plugins/zsh-git-prompt"
+#       git clone https://github.com/zsh-users/zsh-history-substring-search "$HOME/.zsh_plugins/zsh-history-substring-search"
+#       git clone https://github.com/zsh-users/zsh-syntax-highlighting "$HOME/.zsh_plugins/zsh-syntax-highlighting"
+#       success "ok, done"
+#     else
+#       success "zsh is already installed and default, nice one."
+#     fi
+#   else
+#     # If zsh isn't installed, get the platform of the current machine
+#     # If the platform is Linux, try an apt-get to install zsh and then recurse
+#     if [[ $(uname -s) == 'Linux' ]]; then
+#       if [[ -f /etc/redhat-release ]]; then
+#         info "installing zsh"
+#         sudo yum install zsh
+#         success "ok done"
+#         install_zsh
+#       fi
+#       if [[ -f /etc/debian_version ]]; then
+#         info "installing zsh"
+#         sudo apt-get install zsh
+#         success "ok done"
+#         install_zsh
+#       fi
+#       # If the platform is OS X, tell the user to install zsh :)
+#     elif [[ $(uname -s) == 'Darwin' ]]; then
+#       info "installing zsh"
+#       brew install zsh
+#       success "ok done"
+#       install_zsh
+#     fi
+#   fi
+# }
 
 install_dotfiles () {
   info 'installing dotfiles'
@@ -174,51 +171,52 @@ install_dotfiles () {
     link_file "$src" "$dst"
   done
 
-  # neovim
-  mkdir -p $HOME/.config/nvim
-  link_file $DOTFILES_ROOT/vim/nvim/init.vim.symlink $HOME/.config/nvim/init.vim
-  mkdir -p $HOME/.config/nvim/UltiSnips
-  for src in $(find -H "$DOTFILES_ROOT/vim/UltiSnips" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
-  do
-    dst="$HOME/.config/nvim/UltiSnips/$(basename "${src%.*}")"
-    link_file "$src" "$dst"
-  done
-}
-
-install_node () {
-  if ! hash node 2>/dev/null; then
-    if [[ $(uname -s) == 'Linux' ]]; then
-      info "installing nvm"
-      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.1/install.sh | bash
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-      info "installing latest version of node"
-      nvm install node
-      info "use latest version of node"
-      nvm use default
-      info "installing some npm packages"
-      install_npm_packages
-      success "ok done"
-    elif [[ $(uname -s) == 'Darwin' ]]; then
-      info "installing node"
-      brew install node
-      info "installing some npm packages"
-      install_npm_packages
-      success "ok done"
-    fi
-  else
-    success "node is already installed, nice one."
-  fi
+  # vim
+  link_file $DOTFILES_ROOT/vim/vimrc.symlink $HOME/.vimrc
 }
 
 install_npm_packages () {
     npm install tern -g
+    npm install standard -g
 }
 
-install_brew
-install_zsh
-install_node
+if [[ $(uname -s) == 'Linux' ]]; then
+  if [[ -f /etc/redhat-release ]]; then
+    # TODO
+    info "todo"
+    # sudo yum install zsh
+    # success "ok done"
+    # install_zsh
+  fi
+  if [[ -f /etc/debian_version ]]; then
+    # TODO
+    info "todo"
+    # info "installing zsh"
+    # sudo apt-get install zsh
+    # success "ok done"
+    # install_zsh
+  fi
+  # If the platform is OS X, tell the user to install zsh :)
+elif [[ $(uname -s) == 'Darwin' ]]; then
+  # install brew and its deps
+  install_brew
+
+  # install zsh plugins
+  info "setting zsh as default"
+  chsh -s $(which zsh)
+
+  info "cloning zsh plugins"
+  git clone https://github.com/olivierverdier/zsh-git-prompt "$HOME/.zsh_plugins/zsh-git-prompt"
+  git clone https://github.com/zsh-users/zsh-history-substring-search "$HOME/.zsh_plugins/zsh-history-substring-search"
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting "$HOME/.zsh_plugins/zsh-syntax-highlighting"
+  success "ok, done"
+
+fi
+
+# should work on all platforms
+install_npm_packages
 install_dotfiles
+# install_zsh
 
 info 'don`t forget to source your .zshr!'
 success 'that`s all folks!'

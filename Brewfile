@@ -14,5 +14,6 @@ cask 'google-chrome'
 cask 'firefox'
 cask 'iterm2'
 cask 'slack'
+cask 'alfred'
 cask 'rowanj-gitx'
 

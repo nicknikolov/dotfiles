@@ -113,7 +113,7 @@ install_brew () {
   fi
 
   info "now installing brew packages"
-  brew bundle
+  brew bundle || true
   success "ok done"
 }
 

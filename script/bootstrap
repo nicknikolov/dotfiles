@@ -108,12 +108,13 @@ install_brew () {
     info "installing homebrew"
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     success "ok done"
-    info "now installing packages"
-    brew bundle
-    success "ok done"
   else
     success "homebrew is already installed."
   fi
+
+  info "now installing brew packages"
+  brew bundle
+  success "ok done"
 }
 
 # install_zsh () {

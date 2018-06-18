@@ -34,7 +34,7 @@
   l = "!. ~/.githelpers && pretty_git_log"
   la = !git l --all
 [core]
-  editor = nvim
+  editor = vim
   excludesfile = ~/.gitignore
 [color]
   ui = true

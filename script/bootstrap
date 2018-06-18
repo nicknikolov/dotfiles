@@ -202,8 +202,8 @@ elif [[ $(uname -s) == 'Darwin' ]]; then
   # install brew and its deps
   install_brew
 
-  # install zsh plugins
   info "setting zsh as default"
+  sudo sh -c "echo $(which zsh) >> /etc/shells"
   chsh -s $(which zsh)
 
   info "cloning zsh plugins"

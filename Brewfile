@@ -9,6 +9,7 @@ brew 'ffmpeg'
 brew 'graphicsmagick'
 brew 'the_silver_searcher'
 brew 'reattach-to-user-namespace'
+brew 'fzf'
 
 cask 'google-chrome'
 cask 'firefox'

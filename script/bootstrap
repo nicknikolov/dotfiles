@@ -173,7 +173,11 @@ install_dotfiles () {
   done
 
   # vim
-  link_file $DOTFILES_ROOT/vim/vimrc.symlink $HOME/.vimrc
+  # TODO why?
+  # link_file $DOTFILES_ROOT/vim/vimrc.symlink $HOME/.vimrc
+
+  # no need to link these i guess
+  cp -r $DOTFILES_ROOT/vim/colors $HOME/.vim/colors
 }
 
 install_npm_packages () {

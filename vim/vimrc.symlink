@@ -35,11 +35,9 @@ filetype plugin indent on
 
 syntax enable
 set t_Co=256
-" set background=dark
-" colorscheme dark_matter
 
-set background=light
 colorscheme solarized
+set background=light
 
 " call jspretmpl#register_tag('html', 'html')
 " call jspretmpl#register_tag('css', 'css')
@@ -59,6 +57,7 @@ set ttyfast
 set lazyredraw
 set showtabline=2
 set laststatus=2
+set cursorline
 
 set nonumber
 set tabstop=2

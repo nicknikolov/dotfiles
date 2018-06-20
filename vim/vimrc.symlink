@@ -5,8 +5,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " UI
-Plug 'nicknikolov/dark-matter.vim'
-Plug 'lifepillar/vim-solarized8'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 

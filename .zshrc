@@ -20,11 +20,18 @@ alias la='ls -gohGa'
 alias nodetree='tree -I "node_modules" .'
 alias ngp='npm ls -g --depth=0'
 alias vi='vim'
+alias dot='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+alias bear_backup='python3 /Users/nicknikolov/Work/Bear-Markdown-Export/bear_export_sync.py --out ~/Notes/Bear --backup ~/Notes/Backup'
 
 # History
 export HISTSIZE=100000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
+
+setopt    appendhistory     #Append history to the history file (no overwriting)
+setopt    sharehistory      #Share history across terminals
+setopt    incappendhistory  #Immediate
 
 # Plugins
 # source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -51,3 +58,9 @@ n() {
   cd -
 }
 
+export PATH="/usr/local/opt/python@3.7/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+eval "$(pyenv init -)"
+export PATH="/usr/local/opt/llvm@8/bin:$PATH"

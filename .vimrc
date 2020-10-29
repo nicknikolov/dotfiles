@@ -24,6 +24,8 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 "" Rust
 " Plug 'rust-lang/rust.vim'
 
+Plug 'JuliaEditorSupport/julia-vim'
+
 " Utilities
 Plug 'guns/xterm-color-table.vim'
 Plug 'tpope/vim-commentary'
@@ -40,7 +42,7 @@ syntax enable
 set t_Co=256
 
 " colorscheme solarized
-" set background=light
+set background=dark
 
 " call jspretmpl#register_tag('html', 'html')
 " call jspretmpl#register_tag('css', 'css')
@@ -116,6 +118,8 @@ autocmd BufWinLeave * call clearmatches()
 
 nnoremap <leader>ev :e ~/.vimrc<cr>
 nnoremap <leader>so :source ~/.vimrc<cr>
+
+vnoremap <leader>y "+y
 
 " close buffer without destroying layout
 nnoremap <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>

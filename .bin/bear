@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Bear"
+
+if [ "$1" == "backup" ]; then
+  echo "exporting and syncing"
+  python3 /Users/nicknikolov/Work/Bear-Markdown-Export/bear_export_sync.py --out ~/Notes/Bear --backup ~/Notes/Backup
+elif [ "$1" == "links" ]; then
+  echo "not exporting"
+fi
+

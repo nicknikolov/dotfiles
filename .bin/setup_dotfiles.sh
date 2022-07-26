@@ -21,6 +21,9 @@ install_brew () {
   if ! hash brew 2>/dev/null; then
     info "installing homebrew"
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/nicknikolov/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    source ~/.zprofile
     success "ok done"
   else
     success "homebrew is already installed."
@@ -34,8 +37,6 @@ install_brew () {
 install_brew
 
 info "switching shell to fish"
-# setup fish
-# add to shells
-echo /usr/local/bin/fish | sudo tee -a /etc/shells
-# change default to fish
-chsh -s /usr/local/bin/fish
+# for intel switch `/opt/homebrew` to `/usr/local`
+echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/fish

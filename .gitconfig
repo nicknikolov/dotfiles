@@ -1,6 +1,6 @@
 [user]
   name = Nick Nikolov
-  email = nick@nklv.me
+  email = 1440420+nicknikolov@users.noreply.github.com
 [color]
   ui = auto
 [alias]
@@ -16,7 +16,6 @@
   aa = add --all
   pullff = pull --ff-only
   pom = push origin master
-  visual = !gitk
   unstage = reset
   uncommit = reset --soft HEAD^
 
@@ -36,5 +35,5 @@
   l = "!. ~/.githelpers && pretty_git_log"
   la = !git l --all
 [core]
-  editor = vim
+  editor = vi
   excludesfile = ~/.gitignore

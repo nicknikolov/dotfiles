@@ -42,7 +42,7 @@ syntax enable
 set t_Co=256
 
 " colorscheme solarized
-set background=dark
+set background=light
 
 " call jspretmpl#register_tag('html', 'html')
 " call jspretmpl#register_tag('css', 'css')
